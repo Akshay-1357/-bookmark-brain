@@ -7,7 +7,7 @@ searchBtn.addEventListener('click', () => {
     const query = searchBox.value
     console.log("Searching for:", query)
 
-    fetch("https://your-railway-url.up.railway.app/search?query=" + encodeURIComponent(query))
+    fetch("https://bookmark-brain-production.up.railway.app/search?query=" + encodeURIComponent(query))
         .then(response => response.json())
         .then(data => {
             results.innerHTML = ""
