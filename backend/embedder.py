@@ -32,6 +32,9 @@ def store_page(url, title, text):
             embeddings=[embedding],
            
             metadatas=[{"url": url, "title": title, "chunk": chunk}]
+
+           
             
         )
+    return {"status": "ok", "chunks_stored": len(chunks)}
     
