@@ -30,4 +30,4 @@ def store(data: PageData):
 @app.get("/search")
 def search(query: str):
     results = search_pages(query)
-    return results
+    return {"metadatas": [results]}
