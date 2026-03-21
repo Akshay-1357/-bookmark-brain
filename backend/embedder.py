@@ -1,11 +1,20 @@
-import chromadb
-from sentence_transformers import SentenceTransformer
-import uuid
-import re
 
-client = chromadb.PersistentClient(path="chroma_store")
-collection = client.get_or_create_collection("pages")
-model = SentenceTransformer("all-MiniLM-L6-v2")
+import os
+from dotenv import load_dotenv
+from supabase import create_client
+from fastembed import TextEmbedding
+import re
+import uuid
+
+
+load_dotenv()
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+model = TextEmbedding("BAAI/bge-small-en-v1.5")
+
 
 def chunk_text(text, chunk_size=500, overlap=50):
     
@@ -15,26 +24,19 @@ def chunk_text(text, chunk_size=500, overlap=50):
         chunks.append(text[i:i + chunk_size])
     return chunks
 
+
 def store_page(url, title, text):
-
     chunks = chunk_text(text)
-  
+
     for chunk in chunks:
-   
-
-        embedding = model.encode(chunk).tolist()
-        
-        collection.add(
       
+        embedding = list(model.embed([chunk]))[0].tolist()
 
-            ids=[str(uuid.uuid4())],
- 
-            embeddings=[embedding],
-           
-            metadatas=[{"url": url, "title": title, "chunk": chunk}]
+        supabase.table("pages").insert({
+            "url": url,
+            "title": title,
+            "chunk": chunk,
+            "embedding": embedding
+        }).execute()
 
-           
-            
-        )
     return {"status": "ok", "chunks_stored": len(chunks)}
-    

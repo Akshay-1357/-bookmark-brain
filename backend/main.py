@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from embedder import store_page
 from searcher import search_pages
 from embedder import store_page as embed_store_page
 app = FastAPI()
@@ -30,4 +29,4 @@ def store(data: PageData):
 @app.get("/search")
 def search(query: str):
     results = search_pages(query)
-    return results
+    return {"metadatas": [results]}
