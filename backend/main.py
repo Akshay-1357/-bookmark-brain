@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+
+from embedder import store_page
+from searcher import search_pages
 app = FastAPI()
 
 app.add_middleware(
