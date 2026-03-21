@@ -1,20 +1,17 @@
 {
-  "manifest_version": 1,
-  "name": "Bookmark Brain",
-  "version": "1.0",
-  "description": "Semantic search for your browsing history",
-
-  "permissions": ["activeTab", "scripting", "tabs"],
-  "host_permissions": ["http://localhost:8000/*"],
-
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
+    "manifest_version": 3,
+    "name": "Bookmark Brain",
+    "version": "1.0",
+    "description": "Semantic search for your browsing history",
+    "permissions": ["activeTab", "storage"],
+    "host_permissions": ["<all_urls>"],
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"]
+        }
+    ],
+    "action": {
+        "default_popup": "popup.html"
     }
-  ],
-  "action": {
-    "default_popup": "popup.html"
-  }
-
 }
