@@ -2,7 +2,7 @@
 import os
 from dotenv import load_dotenv
 from supabase import create_client
-from sentence_transformers import SentenceTransformer
+from fastembed import TextEmbedding
 import re
 import uuid
 
@@ -13,7 +13,7 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
-model = SentenceTransformer("all-MiniLM-L6-v2")
+model = TextEmbedding("BAAI/bge-small-en-v1.5")
 
 
 def chunk_text(text, chunk_size=500, overlap=50):
@@ -30,7 +30,7 @@ def store_page(url, title, text):
 
     for chunk in chunks:
       
-        embedding = model.encode(chunk).tolist()
+        embedding = list(model.embed([chunk]))[0].tolist()
 
         supabase.table("pages").insert({
             "url": url,
