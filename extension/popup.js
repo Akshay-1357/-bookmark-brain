@@ -5,17 +5,33 @@ const status = document.getElementById('status')
 
 searchBtn.addEventListener('click', () => {
     const query = searchBox.value
+    console.log("Searching for:", query)
+
     fetch("http://127.0.0.1:8000/search?query=" + query)
         .then(response => response.json())
         .then(data => {
             results.innerHTML = ""
-            data.metadatas[0].forEach(function(item, index) {
-                results.innerHTML += `
-                    <div class="result-card">
-                        <a href="${item.url}" target="_blank">${item.title}</a>
-                        <p>${item.chunk}</p>
-                    </div>
-                `
-            })
+const metadatas = data.metadatas[0]
+
+metadatas.forEach(function(item, index) {
+    const card = document.createElement('div')
+    card.className = 'result-card'
+    if (index >= 2) card.style.display = 'none'
+    card.innerHTML = `
+        <a href="${item.url}" target="_blank">${item.title}</a>
+        <p>${item.chunk}</p>
+    `
+    results.appendChild(card)
+})
+
+if (metadatas.length > 2) {
+    const showMore = document.createElement('button')
+    showMore.innerText = "Show More"
+    showMore.onclick = function() {
+        document.querySelectorAll('.result-card').forEach(c => c.style.display = 'block')
+        showMore.style.display = 'none'
+    }
+    results.appendChild(showMore)
+}
         })
 })
