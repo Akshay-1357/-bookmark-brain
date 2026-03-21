@@ -35,3 +35,17 @@ if (metadatas.length > 2) {
 }
         })
 })
+const toggle = document.getElementById('toggle')
+const toggleLabel = document.getElementById('toggle-label')
+
+chrome.storage.local.get('capturing', function(data) {
+    const isOn = data.capturing !== false
+    toggle.checked = isOn
+    toggleLabel.innerText = isOn ? "Capturing: ON" : "Capturing: OFF"
+})
+
+toggle.addEventListener('change', function() {
+    const isOn = toggle.checked
+    chrome.storage.local.set({ capturing: isOn })
+    toggleLabel.innerText = isOn ? "Capturing: ON" : "Capturing: OFF"
+})
