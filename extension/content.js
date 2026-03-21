@@ -20,4 +20,10 @@ function sendToBackend(){
     })
 }
 console.log("Bookmark Brain content.js loaded on:", url)
-setTimeout(sendToBackend, 30000)
+
+chrome.storage.local.get('capturing', function(data) {
+    const isOn = data.capturing !== false
+    if (isOn) {
+        setTimeout(sendToBackend, 20000)
+    }
+})

@@ -35,6 +35,17 @@
         cursor: pointer;
         transition: background 0.2s;
       }
+      #toggle-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#toggle-label {
+    font-size: 13px;
+    color: #555;
+}
        body {
         width: 450px;
         font-family: 'Segoe UI', sans-serif;
@@ -115,6 +126,10 @@
 <body>
     <div class="header">
     <h1>Bookmark Brain</h1>
+    <div id="toggle-container">
+    <span id="toggle-label">Capturing: ON</span>
+    <input type="checkbox" id="toggle" checked>
+</div>
     <p class="tagline">Your personal search engine</p>
 </div>
     <input type="text" placeholder="Search the history" id="search-box">
@@ -126,4 +141,5 @@
 
     
 </body>
+
 </html>
