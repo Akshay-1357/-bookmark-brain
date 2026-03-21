@@ -7,7 +7,7 @@ const content = document.body.innerText.slice(0,5000)
 
 function sendToBackend(){
     console.log("Sending to backend...")
-    fetch("http://127.0.0.1:8000/store", {
+    fetch("https://your-railway-url.up.railway.app/store", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

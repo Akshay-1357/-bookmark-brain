@@ -7,7 +7,7 @@ searchBtn.addEventListener('click', () => {
     const query = searchBox.value
     console.log("Searching for:", query)
 
-    fetch("http://127.0.0.1:8000/search?query=" + query)
+    fetch("https://your-railway-url.up.railway.app/search?query=" + encodeURIComponent(query))
         .then(response => response.json())
         .then(data => {
             results.innerHTML = ""
