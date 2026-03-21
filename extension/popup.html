@@ -3,143 +3,355 @@
 <head>
     <meta charset="UTF-8">
     <title>Bookmark Brain</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
-        h1{
-            font-size: 35px;
-            font-weight: Bold;
-            color:darkgoldenrod
+        :root {
+            --gold: #C9A84C;
+            --gold-light: #F0D080;
+            --gold-dim: rgba(201,168,76,0.15);
+            --dark: #0f0e0b;
+            --surface: #1a1814;
+            --surface2: #242018;
+            --text: #f0ead8;
+            --text-muted: #8a7f68;
+            --border: rgba(201,168,76,0.2);
+            --radius: 10px;
         }
-        #search-box{
-            width:100%;
-            padding: 10px 12px;
-            border: 1.5px solid #ccc;
-            border-radius: 8px;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 380px;
+            min-height: 200px;
+            background: var(--dark);
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            padding: 20px;
+            overflow-x: hidden;
+        }
+
+        /* Subtle grain texture */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-icon {
+            width: 28px;
+            height: 28px;
+            background: var(--gold-dim);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 14px;
+        }
+
+        .brand-text h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gold-light);
+            letter-spacing: 0.01em;
+            line-height: 1;
+        }
+
+        .brand-text .tagline {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 300;
+            margin-top: 2px;
+            letter-spacing: 0.05em;
+        }
+
+        /* Toggle */
+        .toggle-wrap {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        #toggle-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        .switch {
+            position: relative;
+            width: 34px;
+            height: 18px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .slider::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            left: 2px;
+            top: 2px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            transition: all 0.25s ease;
+        }
+
+        input:checked + .slider {
+            background: var(--gold-dim);
+            border-color: var(--gold);
+        }
+
+        input:checked + .slider::before {
+            background: var(--gold);
+            transform: translateX(16px);
+        }
+
+        /* Search */
+        .search-wrap {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 13px;
+            pointer-events: none;
+        }
+
+        #search-box {
+            width: 100%;
+            padding: 11px 12px 11px 36px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            color: var(--text);
             outline: none;
-            transition: border 0.2s;
-            color: darkorange;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-            #search-box:focus {
-            border-color: #3b3b98;
+
+        #search-box::placeholder {
+            color: var(--text-muted);
+            font-weight: 300;
         }
+
+        #search-box:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(201,168,76,0.08);
+        }
+
         #search-btn {
-        margin-top: 10px;
-        width: 100%;
-        padding: 10px;
-        background-color:gold;
-        color: rgb(0, 0, 0);
-        border: none;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-      #toggle-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
+            width: 100%;
+            padding: 11px;
+            background: linear-gradient(135deg, var(--gold) 0%, #a8852e 100%);
+            color: var(--dark);
+            border: none;
+            border-radius: var(--radius);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            transition: opacity 0.2s, transform 0.1s;
+        }
 
-#toggle-label {
-    font-size: 13px;
-    color: #555;
-}
-       body {
-        width: 450px;
-        font-family: 'Segoe UI', sans-serif;
-        background-color: #f9f9f9;
-        padding: 18px;
-        color: #1a1a1a;
-      }
-       #search-btn:hover {
-        background-color: darkorange;
-      }
-      #results {
-        margin-top: 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-      }.result-card {
-        background: white;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 10px 12px;
-      }
+        #search-btn:hover {
+            opacity: 0.9;
+        }
 
-      .result-card a {
-        font-size: 13px;
-        font-weight: 600;
-        color: #3b3b98;
-        text-decoration: none;
-        display: block;
-        margin-bottom: 4px;
-      }.result-card a:hover {
-        text-decoration: underline;
-      }
+        #search-btn:active {
+            transform: scale(0.98);
+        }
 
-      .result-card p {
-        font-size: 12px;
-        color: #555;
-        line-height: 1.5;
-      }
+        /* Spinner */
+        .hidden { display: none !important; }
 
-      #status {
-        font-size: 12px;
-        color: #888;
-        text-align: center;
-        margin-top: 12px;
-      }
-      .hidden {
-    display: none;
-}
+        #spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 16px auto;
+        }
 
-.spinner {
-    width: 24px;
-    height: 24px;
-    border: 3px solid #f0d080;
-    border-top: 3px solid darkgoldenrod;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-    margin: 16px auto;
-}
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to   { transform: rotate(360deg); }
-}
-.header {
-    text-align: center;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid gold;
-}
+        /* Results */
+        #results {
+            margin-top: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-.tagline {
-    font-size: 12px;
-    color: #888;
-    margin-top: 4px;
-}
+        .result-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 11px 13px;
+            transition: border-color 0.2s, background 0.2s;
+            animation: fadeUp 0.25s ease forwards;
+            opacity: 0;
+        }
+
+        .result-card:hover {
+            border-color: var(--gold);
+            background: var(--surface2);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(6px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-card:nth-child(1) { animation-delay: 0.05s; }
+        .result-card:nth-child(2) { animation-delay: 0.1s; }
+        .result-card:nth-child(3) { animation-delay: 0.15s; }
+
+        .result-card a {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gold-light);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .result-card a:hover {
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .result-card p {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.55;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Show More */
+        #show-more-btn {
+            width: 100%;
+            margin-top: 4px;
+            padding: 9px;
+            background: transparent;
+            border: 1px dashed var(--border);
+            border-radius: var(--radius);
+            color: var(--text-muted);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+
+        #show-more-btn:hover {
+            border-color: var(--gold);
+            color: var(--gold-light);
+        }
+
+        #status {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            margin-top: 10px;
+            letter-spacing: 0.03em;
+        }
     </style>
 </head>
 <body>
+<div class="content">
     <div class="header">
-    <h1>Bookmark Brain</h1>
-    <div id="toggle-container">
-    <span id="toggle-label">Capturing: ON</span>
-    <input type="checkbox" id="toggle" checked>
-</div>
-    <p class="tagline">Your personal search engine</p>
-</div>
-    <input type="text" placeholder="Search the history" id="search-box">
+        <div class="brand">
+            <div class="brand-icon">🧠</div>
+            <div class="brand-text">
+                <h1>Bookmark Brain</h1>
+                <p class="tagline">Your personal search engine</p>
+            </div>
+        </div>
+        <div class="toggle-wrap">
+            <span id="toggle-label">ON</span>
+            <label class="switch">
+                <input type="checkbox" id="toggle" checked>
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
+    <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" placeholder="Search your browsing history…" id="search-box">
+    </div>
     <button id="search-btn">Search</button>
-    <div id="spinner" class="spinner hidden"></div> 
+
+    <div id="spinner" class="spinner hidden"></div>
     <div id="results"></div>
     <p id="status"></p>
-    <script src="popup.js"></script>
-
-    
+</div>
+<script src="popup.js"></script>
 </body>
-
 </html>
