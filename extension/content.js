@@ -6,7 +6,8 @@ const content = document.body.innerText.slice(0,5000)
 
 
 function sendToBackend(){
-    fetch("http://localhost:8000/store", {
+    console.log("Sending to backend...")
+    fetch("http://127.0.0.1:8000/store", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -18,5 +19,5 @@ function sendToBackend(){
         })
     })
 }
-
+console.log("Bookmark Brain content.js loaded on:", url)
 setTimeout(sendToBackend, 30000)

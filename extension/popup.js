@@ -5,7 +5,7 @@ const status = document.getElementById('status')
 
 searchBtn.addEventListener('click', () => {
     const query = searchBox.value
-    fetch("http://localhost:8000/search?query=" + query)
+    fetch("http://127.0.0.1:8000/search?query=" + query)
         .then(response => response.json())
         .then(data => {
             results.innerHTML = ""
