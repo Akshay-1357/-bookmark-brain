@@ -19,10 +19,10 @@ class PageData(BaseModel):
     content :str
 
 @app.post("/store")
-def store_page(data: PageData):
-    return {"status": "ok"}
+def store_page_endpoint(data: PageData):
+    return store_page(data.url, data.title, data.content)
     
-
+    
 @app.get("/search")
-def search(query : str):
-    return { "results":[]}
+def search(query:str):
+    return search_pages(query , n_results = 5)

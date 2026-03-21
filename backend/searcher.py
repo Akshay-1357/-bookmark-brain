@@ -1,6 +1,6 @@
 import chromadb
 
-from sentece_transformers import SentenceTransformer
+from sentence_transformers import SentenceTransformer
 
 client = chromadb.PersistentClient(path="chroma_store")
 collection = client.get_or_create_collection("pages")
