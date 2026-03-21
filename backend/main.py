@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 from embedder import store_page
 from searcher import search_pages
+from embedder import store_page as embed_store_page
 app = FastAPI()
 
 app.add_middleware(
@@ -18,11 +19,15 @@ class PageData(BaseModel):
     title : str
     content :str
 
+
+
 @app.post("/store")
-def store_page_endpoint(data: PageData):
-    return store_page(data.url, data.title, data.content)
+def store(data: PageData):
+    embed_store_page(data.url, data.title, data.content)
+    return {"status": "ok"}
     
-    
+
 @app.get("/search")
-def search(query:str):
-    return search_pages(query , n_results = 5)
+def search(query: str):
+    results = search_pages(query)
+    return results
