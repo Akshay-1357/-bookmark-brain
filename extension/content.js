@@ -2,7 +2,7 @@ const url = window.location.href
 const title = document.title
 
 
-const content = document.body.innerText.slice(0,5000)
+const content = document.body.innerText.slice(0,4000)
 
 
 function sendToBackend(){
@@ -24,6 +24,6 @@ console.log("Bookmark Brain content.js loaded on:", url)
 chrome.storage.local.get('capturing', function(data) {
     const isOn = data.capturing !== false
     if (isOn) {
-        setTimeout(sendToBackend, 20000)
+        setTimeout(sendToBackend, 15000)
     }
 })
